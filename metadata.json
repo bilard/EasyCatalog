@@ -1,0 +1,5 @@
+{
+  "name": "Guide Interactif EasyCatalog",
+  "description": "Une application web pour rechercher, apprendre et personnaliser des fonctions du manuel EasyCatalog à l'aide de l'IA Gemini. L'interface est entièrement en français pour une expérience utilisateur optimale.",
+  "requestFramePermissions": []
+}
