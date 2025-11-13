@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const [isElaborating, setIsElaborating] = useState(false);
   const [paletteImage, setPaletteImage] = useState<string | null>(null);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [customizerVersion, setCustomizerVersion] = useState(0);
   
   useEffect(() => {
     if (query.trim().length < 5) {
@@ -44,6 +45,9 @@ const App: React.FC = () => {
   
   const handleSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
+
+    // Incrémente la version pour forcer la réinitialisation de l'atelier de formule
+    setCustomizerVersion(v => v + 1);
 
     setIsLoading(true);
     setError('');
@@ -131,6 +135,8 @@ const App: React.FC = () => {
   const handleViewChange = (view: View) => {
     if (view === activeView) return;
 
+    setCustomizerVersion(v => v + 1); // Reset on every view change
+
     setAnimationClass('opacity-0'); // Démarre le fondu sortant
 
     setTimeout(() => {
@@ -176,7 +182,7 @@ const App: React.FC = () => {
       </nav>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
+        <div className={`mx-auto ${activeView === 'customizer' ? 'w-[95%] max-w-screen-xl' : 'max-w-4xl'}`}>
           <div className={`transition-opacity duration-200 ease-in-out ${animationClass}`}>
             {activeView === 'search' && (
               <>
@@ -255,7 +261,7 @@ const App: React.FC = () => {
                     Générez des formules de champs personnalisés pour vos besoins spécifiques à l'aide de l'IA.
                   </p>
                 </header>
-                <Customizer />
+                <Customizer key={customizerVersion} />
               </>
             )}
             

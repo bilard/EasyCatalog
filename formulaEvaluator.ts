@@ -52,6 +52,7 @@ const functionImplementations: Record<string, (...args: any[]) => any> = {
         return parts[index] || '';
     },
     PARTCOUNT: (str, delim) => cleanString(str).split(cleanString(delim)).length,
+    LITERAL: (str) => str,
 
     // Logic
     IF: (op1, op, op2, trueVal, falseVal) => {

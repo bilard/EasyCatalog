@@ -2,14 +2,14 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { FUNCTION_LIST } from '../constants';
-import { FunctionInfo, ParsedFormulaNode } from '../types';
+import { FunctionInfo } from '../types';
 import FunctionList from './FunctionList';
-import { explainFormula } from '../services/geminiService';
+import { explainFormula, generateFormulaFromRequest } from '../services/geminiService';
 import { parseFormula } from '../formulaParser';
 import { evaluateFormulaTree } from '../formulaEvaluator';
 import LoadingSpinner from './LoadingSpinner';
 import FormulaVisualizer from './FormulaVisualizer';
-import { SparklesIcon } from './icons';
+import { SparklesIcon, TrashIcon, CodeIcon } from './icons';
 
 const Customizer: React.FC = () => {
     const functions = FUNCTION_LIST;
@@ -20,6 +20,22 @@ const Customizer: React.FC = () => {
     const [formulaExplanation, setFormulaExplanation] = useState('');
     const [isExplaining, setIsExplaining] = useState(false);
     const formulaTextareaRef = useRef<HTMLTextAreaElement>(null);
+    const [naturalLanguageRequest, setNaturalLanguageRequest] = useState('');
+    const [isGeneratingFormula, setIsGeneratingFormula] = useState(false);
+    const [generationError, setGenerationError] = useState('');
+
+    const resetAllState = useCallback(() => {
+        setSearchTerm('');
+        setSelectedFunction(functions[0] || null);
+        setParamValues({});
+        setFormula('');
+        setFormulaExplanation('');
+        setNaturalLanguageRequest('');
+        setGenerationError('');
+        setIsExplaining(false);
+        setIsGeneratingFormula(false);
+    }, [functions]);
+
 
     const parsedFormula = useMemo(() => {
         if (!formula.trim()) return null;
@@ -39,21 +55,9 @@ const Customizer: React.FC = () => {
     }, [parsedFormula]);
 
 
-    const filteredFunctions = React.useMemo(() => {
-        const term = searchTerm.trim().toLowerCase();
-        if (!term) {
-            return functions;
-        }
-        return functions.filter(func =>
-            func.nom.toLowerCase().includes(term)
-        );
-    }, [searchTerm, functions]);
-
     const handleSelectFunction = useCallback((func: FunctionInfo) => {
         setSelectedFunction(func);
         setParamValues({});
-        setFormula('');
-        setFormulaExplanation('');
     }, []);
     
     const handleParamChange = (paramName: string, value: string) => {
@@ -67,7 +71,6 @@ const Customizer: React.FC = () => {
         const paramsString = func.parameters.map(p => {
             const value = paramValues[p]?.trim();
             if (value) {
-                // Si la valeur est un nombre, une autre fonction, ou déjà entre guillemets, ne pas ajouter de guillemets.
                 if (!isNaN(Number(value)) && value !== '' || /^\w+\(.*\)$/.test(value) || value.startsWith("'") && value.endsWith("'")) {
                     return value;
                 }
@@ -84,12 +87,14 @@ const Customizer: React.FC = () => {
 
         const newText = text.substring(0, start) + template + text.substring(end);
         setFormula(newText);
+        
         setParamValues({});
 
         textarea.focus();
         
+        // Surligne le texte inséré pour le rendre visible à l'utilisateur
         setTimeout(() => {
-            textarea.selectionStart = textarea.selectionEnd = start + template.length;
+            textarea.setSelectionRange(start, start + template.length);
         }, 0);
     };
 
@@ -111,6 +116,27 @@ const Customizer: React.FC = () => {
             setIsExplaining(false);
         }
     };
+    
+    const handleGenerateFormula = async () => {
+        if (!naturalLanguageRequest.trim()) return;
+        setIsGeneratingFormula(true);
+        setGenerationError('');
+        setFormulaExplanation('');
+
+        try {
+            const generatedFormula = await generateFormulaFromRequest(naturalLanguageRequest);
+            if (generatedFormula.startsWith('ERREUR:')) {
+                setGenerationError(generatedFormula.replace('ERREUR:', '').trim());
+            } else {
+                setFormula(generatedFormula);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la génération de formule", error);
+            setGenerationError("Une erreur inattendue est survenue.");
+        } finally {
+            setIsGeneratingFormula(false);
+        }
+    };
 
 
     return (
@@ -118,7 +144,7 @@ const Customizer: React.FC = () => {
             <div>
                 <h2 className="text-2xl font-bold text-cyan-300 mb-4">1. Choisissez une fonction</h2>
                 <FunctionList
-                    functions={filteredFunctions}
+                    functions={functions}
                     selectedFunction={selectedFunction}
                     onSelectFunction={handleSelectFunction}
                     searchTerm={searchTerm}
@@ -130,33 +156,36 @@ const Customizer: React.FC = () => {
             </div>
 
             <div>
-                <h2 className="text-2xl font-bold text-cyan-300 mb-4">2. Atelier de Formule</h2>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold text-cyan-300">2. Atelier de Formule</h2>
+                    <button 
+                        onClick={resetAllState}
+                        className="flex items-center gap-2 text-sm bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 px-3 rounded-lg transition-colors"
+                        title="Vider tous les champs de l'atelier"
+                    >
+                        <TrashIcon className="w-4 h-4" />
+                        <span>Tout effacer</span>
+                    </button>
+                </div>
                 <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4 space-y-4">
                     
                     <div>
                         <h3 className="text-lg font-semibold text-slate-300 mb-2">Visualisation de la Formule</h3>
                         <div className="min-h-[120px] bg-slate-900/70 p-4 rounded-md border border-slate-700 font-mono overflow-x-auto">
-                            <FormulaVisualizer node={evaluatedFormulaTree} />
+                           {formula.trim() ? <FormulaVisualizer node={evaluatedFormulaTree} /> : <p className="text-slate-600">La visualisation de votre formule apparaîtra ici.</p>}
                         </div>
-                    </div>
-
-                    <div className="text-sm text-slate-400 p-3 bg-slate-900/50 rounded-md border border-slate-700">
-                      <p className="font-semibold text-slate-300 mb-1">Comment ça marche ?</p>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Remplissez les champs de paramètres ci-dessus OU ignorez-les pour obtenir un modèle de fonction.</li>
-                        <li>Cliquez sur "Insérer la fonction" pour l'ajouter à votre formule ci-dessous.</li>
-                        <li>Pour imbriquer, placez votre curseur dans un <code>&lt;placeholder&gt;</code> avant d'insérer une autre fonction.</li>
-                      </ul>
                     </div>
 
                     <div className="relative">
                         <label htmlFor="formula-builder" className="block text-lg font-semibold text-slate-300 mb-2">Construisez votre formule</label>
                         <textarea
                             id="formula-builder"
+                            name="formula-builder"
                             ref={formulaTextareaRef}
                             value={formula}
                             onChange={(e) => setFormula(e.target.value)}
                             placeholder="Votre formule personnalisée apparaîtra ici..."
+                            autoComplete="off"
                             className="w-full h-40 p-3 bg-slate-950 border border-slate-600 rounded-md text-amber-300 font-mono text-sm placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500 resize-y"
                         />
                         <button 
@@ -186,6 +215,41 @@ const Customizer: React.FC = () => {
                              <article className="p-4 bg-slate-900/70 border border-slate-700 rounded-md text-slate-300 text-sm space-y-2 prose prose-sm prose-invert max-w-none">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{formulaExplanation}</ReactMarkdown>
                             </article>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-2xl font-bold text-cyan-300 mb-4">3. Assistant IA de Formule</h2>
+                <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4 space-y-4">
+                    <div>
+                        <label htmlFor="natural-language-request" className="block text-lg font-semibold text-slate-300 mb-2">Décrivez votre besoin</label>
+                        <textarea
+                            id="natural-language-request"
+                            name="natural-language-request"
+                            value={naturalLanguageRequest}
+                            onChange={(e) => setNaturalLanguageRequest(e.target.value)}
+                            placeholder="Ex: Je veux prendre les 5 premiers caractères du champ 'CodeProduit' et les mettre en majuscules."
+                            autoComplete="off"
+                            className="w-full h-24 p-3 bg-slate-950 border border-slate-600 rounded-md text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 resize-y"
+                        />
+                    </div>
+                     <div className="pt-2">
+                        <button
+                            onClick={handleGenerateFormula}
+                            disabled={!naturalLanguageRequest || isGeneratingFormula}
+                            className="w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                        >
+                            <SparklesIcon className="w-5 h-5" />
+                            <span>{isGeneratingFormula ? "Génération en cours..." : "Générer la formule"}</span>
+                        </button>
+                    </div>
+
+                    {isGeneratingFormula && <LoadingSpinner />}
+                    {generationError && !isGeneratingFormula && (
+                        <div className="text-center text-red-400 bg-red-900/50 p-3 rounded-md text-sm">
+                            {generationError}
                         </div>
                     )}
                 </div>

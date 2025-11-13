@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type, Modality } from "@google/genai";
-import { DOCUMENT_CONTENT } from '../constants';
+import { DOCUMENT_CONTENT, FUNCTION_LIST } from '../constants';
 import { QCMResponse, QuizQuestion, QuizResponse } from '../types';
 
 if (!process.env.API_KEY) {
@@ -274,4 +274,40 @@ export const generatePaletteImage = async (topic: string): Promise<string | null
     console.error("Erreur lors de la génération de l'image de la palette:", error);
     return null;
   }
+};
+
+
+export const generateFormulaFromRequest = async (request: string): Promise<string> => {
+    try {
+        const functionSignatures = FUNCTION_LIST.map(f => `${f.nom}(${f.parameters.join(', ')})`).join('\n');
+        
+        const prompt = `
+Tu es un expert absolu des champs personnalisés du logiciel EasyCatalog.
+Ta mission est de traduire la demande de l'utilisateur en une formule EasyCatalog valide et fonctionnelle.
+
+**Règles strictes :**
+1.  Utilise **uniquement et exclusivement** les fonctions de la liste fournie ci-dessous. N'invente aucune fonction.
+2.  Ta réponse doit contenir **uniquement la formule brute**, sans aucune phrase d'introduction, explication ou formatage supplémentaire.
+3.  Respecte scrupuleusement la syntaxe (majuscules pour les noms de fonctions, parenthèses, guillemets simples pour les chaînes de caractères).
+4.  Si la demande de l'utilisateur est ambiguë, trop complexe, ou irréalisable avec les fonctions disponibles, ta réponse doit commencer **uniquement** par "ERREUR:" suivi d'une brève explication (ex: "ERREUR: Impossible de déterminer le nom du champ à utiliser.").
+
+**Demande de l'utilisateur :**
+"${request}"
+
+**Liste des fonctions disponibles :**
+---
+${functionSignatures}
+---
+`;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-pro',
+            contents: prompt,
+        });
+
+        return response.text.trim();
+    } catch (error) {
+        console.error("Erreur lors de la génération de la formule:", error);
+        return "ERREUR: Une erreur inattendue est survenue lors de la communication avec l'IA.";
+    }
 };

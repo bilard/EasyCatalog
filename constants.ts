@@ -4,266 +4,622 @@ export const FUNCTION_LIST: FunctionInfo[] = [
   {
     nom: 'ABS',
     description: "Retourne la valeur absolue d'un nombre.",
-    parameters: ['Nombre'],
-    example: "ABS(FIELDVAL('Marge'))"
+    parameters: [ 'Nombre' ],
+    example: "ABS(FIELDVAL('Marge'))",
+    category: 'Mathématiques'
   },
   {
     nom: 'AND',
-    description: "Retourne VRAI si toutes les conditions fournies sont vraies.",
-    parameters: ['Condition 1', 'Condition 2', '...'],
-    example: "AND(IF(FIELDSTR('Prix'), '>', 10), IF(FIELDSTR('Disponibilité'), '=', 'TRUE'))"
+    description: 'Renvoie VRAI si tous les arguments sont VRAI.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "AND(IF(FIELDVAL('Price'), '>', 100), FIELDSTR('InStock'))",
+    category: 'Logique'
+  },
+  {
+    nom: 'APPLYXSLT',
+    description: 'Applique une transformation XSLT à un fragment XML.',
+    parameters: [ 'Field', 'XSL Filename' ],
+    example: "APPLYXSLT('XMLField', 'transform.xsl')",
+    category: 'XML & Scripts'
   },
   {
     nom: 'AVG',
-    description: "Calcule la moyenne numérique de ses arguments.",
-    parameters: ['Nombre 1', 'Nombre 2', '...'],
-    example: "AVG(FIELDVAL('Prix1'), FIELDVAL('Prix2'))"
+    description: 'Renvoie la moyenne de ses arguments.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "AVG(FIELDVAL('Val1'), FIELDVAL('Val2'))",
+    category: 'Mathématiques'
+  },
+  {
+    nom: 'CALLSCRIPT',
+    description: 'Exécute un ExtendScript (.jsx) et renvoie son résultat.',
+    parameters: [ 'Filename' ],
+    example: "CALLSCRIPT('myscript.jsx')",
+    category: 'XML & Scripts'
   },
   {
     nom: 'CEILING',
     description: "Arrondit un nombre à l'entier supérieur le plus proche.",
-    parameters: ['Nombre'],
-    example: "CEILING(FIELDVAL('Poids'))"
+    parameters: [ 'Nombre' ],
+    example: "CEILING(FIELDVAL('Poids'))",
+    category: 'Mathématiques'
+  },
+  {
+    nom: 'CHAR',
+    description: 'Insère un caractère basé sur sa valeur Unicode.',
+    parameters: [ 'Character Code' ],
+    example: 'CHAR(65)',
+    category: 'Texte'
+  },
+  {
+    nom: 'CODE128',
+    description: 'Convertit une chaîne en code-barres Code 128.',
+    parameters: [ 'Code' ],
+    example: "CODE128(FIELDSTR('Code'))",
+    category: 'Code-barres & Images'
   },
   {
     nom: 'COMPARESTR',
-    description: "Compare le contenu d'un champ avec une valeur ou un autre champ.",
-    parameters: ['Champ à évaluer', 'Valeur à comparer', 'Valeur si Vrai', 'Valeur si Faux'],
-    example: "COMPARESTR('Description', 'abcdefg', 'Match', 'No Match')"
+    description: "Compare le contenu d'un champ avec une valeur.",
+    parameters: [ 'Field Name', 'Value', 'True Value', 'False Value' ],
+    example: "COMPARESTR('Description', 'abcdefg', 'Match', 'No Match')",
+    category: 'Logique'
   },
   {
     nom: 'CONCAT',
-    description: "Assemble (concatène) plusieurs chaînes de caractères.",
-    parameters: ['Texte 1', 'Texte 2', '...'],
-    example: "CONCAT(FIELDSTR('Prénom'), ' ', FIELDSTR('Nom'))"
+    description: 'Joint plusieurs chaînes de texte en une seule.',
+    parameters: [ 'text1', '[text2]', '...' ],
+    example: "CONCAT('Prix :', FIELDSTR('Price'))",
+    category: 'Texte'
+  },
+  {
+    nom: 'CONTAINSALL',
+    description: 'Teste si une chaîne contient toutes les sous-chaînes spécifiées.',
+    parameters: [ 'Search In', 'Search For', '...' ],
+    example: "CONTAINSALL(FIELDSTR('Text'), 'Apple', 'Dell')",
+    category: 'Logique'
+  },
+  {
+    nom: 'CONTAINSANY',
+    description: "Teste si une chaîne contient l'une des sous-chaînes spécifiées.",
+    parameters: [ 'Search In', 'Search For', '...' ],
+    example: "CONTAINSANY(FIELDSTR('Text'), 'A', 'iMac')",
+    category: 'Logique'
   },
   {
     nom: 'COUNTOF',
     description: "Compte le nombre d'occurrences d'une chaîne dans une autre.",
-    parameters: ['Chaîne de recherche', 'Chaîne à trouver'],
-    example: "COUNTOF(FIELDSTR('Description'), 'et')"
+    parameters: [ 'Search In', 'Search For' ],
+    example: "COUNTOF(FIELDSTR('Text'), 'apple')",
+    category: 'Texte'
   },
   {
     nom: 'DATEFORMAT',
-    description: "Met en forme une date ou une heure selon un format spécifié.",
-    parameters: ['Champ de date', 'Format de sortie'],
-    example: "DATEFORMAT(FIELDSTR('DateCréation'), 'jj/mm/aaaa')"
+    description: 'Met en forme une date ou une heure selon un format spécifié.',
+    parameters: [ 'Champ de date', 'Format de sortie' ],
+    example: "DATEFORMAT(FIELDSTR('DateCréation'), 'jj/mm/aaaa')",
+    category: 'Date & Heure'
   },
   {
     nom: 'DECTOFRAC',
-    description: "Convertit une valeur décimale en fraction.",
-    parameters: ['Valeur décimale', 'Format HTML (Boolean)'],
-    example: "DECTOFRAC(0.5, FALSE)"
+    description: 'Convertit une valeur décimale en fraction.',
+    parameters: [ 'Value', '[Format]' ],
+    example: 'DECTOFRAC(0.5, FALSE)',
+    category: 'Mathématiques'
+  },
+  {
+    nom: 'DISTINCTLIST',
+    description: 'Crée une liste délimitée de valeurs uniques.',
+    parameters: [ 'Separator', 'String', '...' ],
+    example: "DISTINCTLIST(',', 'A', 'B', 'A', 'C')",
+    category: 'Utilitaires'
   },
   {
     nom: 'DIV',
-    description: "Divise un nombre par un autre.",
-    parameters: ['Numérateur', 'Dénominateur'],
-    example: "DIV(FIELDVAL('Prix'), 2)"
+    description: 'Divise deux nombres.',
+    parameters: [ 'LHS', 'Factor' ],
+    example: "DIV(FIELDVAL('Price'), 2)",
+    category: 'Mathématiques'
+  },
+  {
+    nom: 'DOESIMAGEEXIST',
+    description: 'Vérifie si un fichier image existe.',
+    parameters: [ 'Field Name' ],
+    example: "DOESIMAGEEXIST('ImageField')",
+    category: 'Code-barres & Images'
+  },
+  {
+    nom: 'EAN13',
+    description: 'Traduit un code en glyphes pour une police de code-barres.',
+    parameters: [ 'Field Name' ],
+    example: "EAN13('Stock Code')",
+    category: 'Code-barres & Images'
+  },
+  {
+    nom: 'EAN8',
+    description: 'Traduit un code en glyphes pour une police de code-barres.',
+    parameters: [ 'Field Name' ],
+    example: "EAN8('Stock Code')",
+    category: 'Code-barres & Images'
+  },
+  {
+    nom: 'EVALUATEXPATH',
+    description: 'Évalue une expression XPath sur un fragment XML.',
+    parameters: [ 'Field', 'XPath', '[Separator]' ],
+    example: "EVALUATEXPATH('XMLField', '//item')",
+    category: 'XML & Scripts'
   },
   {
     nom: 'FIELDSTR',
-    description: "Retourne le contenu textuel (formaté) du champ spécifié.",
-    parameters: ['Nom du champ'],
-    example: "FIELDSTR('NomProduit')"
+    description: "Renvoie le contenu formaté (texte) d'un champ.",
+    parameters: [ 'Field Name' ],
+    example: "FIELDSTR('Price')",
+    category: 'Données & Champs'
   },
   {
     nom: 'FIELDVAL',
-    description: "Retourne la valeur numérique brute du champ spécifié.",
-    parameters: ['Nom du champ'],
-    example: "FIELDVAL('Prix')"
+    description: "Renvoie la valeur numérique brute d'un champ.",
+    parameters: [ 'Field Name' ],
+    example: "FIELDVAL('Price')",
+    category: 'Données & Champs'
   },
   {
     nom: 'FLOOR',
     description: "Arrondit un nombre à l'entier inférieur le plus proche.",
-    parameters: ['Nombre'],
-    example: "FLOOR(FIELDVAL('PrixDeVente'))"
+    parameters: [ 'Nombre' ],
+    example: "FLOOR(FIELDVAL('PrixDeVente'))",
+    category: 'Mathématiques'
+  },
+  {
+    nom: 'GETNTHPOPULATEDPARAM',
+    description: 'Renvoie le n-ième paramètre non vide.',
+    parameters: [ 'Field Index', '...' ],
+    example: "GETNTHPOPULATEDPARAM(1, 'a', '', 'c', 'd')",
+    category: 'Utilitaires'
+  },
+  {
+    nom: 'GOOGLEQRCODEURL',
+    description: 'Génère une URL pour un QR Code via Google Charts.',
+    parameters: [ 'Width', 'Height', 'Text' ],
+    example: "GOOGLEQRCODEURL(150, 150, 'www.65bit.com')",
+    category: 'Code-barres & Images'
+  },
+  {
+    nom: 'GROUPAVG',
+    description: "Calcule la moyenne d'un champ pour le groupe entier.",
+    parameters: [ 'Group Path', 'Value Field' ],
+    example: "GROUPAVG('Catégorie', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPCOUNT',
+    description: "Compte le nombre d'enregistrements dans le groupe.",
+    parameters: [ 'Group Path' ],
+    example: "GROUPCOUNT('Catégorie')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPCOUNTUNIQUE',
+    description: "Compte le nombre de valeurs uniques d'un champ dans le groupe.",
+    parameters: [ 'Group Path', 'Field' ],
+    example: "GROUPCOUNTUNIQUE('Catégorie', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPFIRST',
+    description: "Renvoie la première valeur d'un champ dans le groupe (après tri).",
+    parameters: [ 'Group Path', 'Sort Field', 'Value Field' ],
+    example: "GROUPFIRST('Catégorie', 'Prix', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPISFIRST',
+    description: "Renvoie VRAI pour les 'n' premiers enregistrements d'un groupe.",
+    parameters: [ 'Group Path', 'Sort Field', 'Number of records' ],
+    example: "GROUPISFIRST('Catégorie', 'Prix', 1)",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPISLAST',
+    description: "Renvoie VRAI pour les 'n' derniers enregistrements d'un groupe.",
+    parameters: [ 'Group Path', 'Sort Field', 'Number of records' ],
+    example: "GROUPISLAST('Catégorie', 'Prix', 1)",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPLAST',
+    description: "Renvoie la dernière valeur d'un champ dans le groupe (après tri).",
+    parameters: [ 'Group Path', 'Sort Field', 'Value Field' ],
+    example: "GROUPLAST('Catégorie', 'Prix', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPLIST',
+    description: "Crée une liste délimitée des valeurs d'un champ pour un groupe.",
+    parameters: [ 'Group Path', 'Sort Field', 'Value Field', '...' ],
+    example: "GROUPLIST('Catégorie', 'Prix', 'Prix', ', ')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPMAX',
+    description: "Trouve la valeur maximale d'un champ dans le groupe.",
+    parameters: [ 'Group Path', 'Value Field' ],
+    example: "GROUPMAX('Catégorie', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPMIN',
+    description: "Trouve la valeur minimale d'un champ dans le groupe.",
+    parameters: [ 'Group Path', 'Value Field' ],
+    example: "GROUPMIN('Catégorie', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPNUMBERSEQUENCE',
+    description: 'Compile une liste de nombres en une chaîne de type ""plage de pages"".',
+    parameters: [ 'Group Path', 'Number Field' ],
+    example: "GROUPNUMBERSEQUENCE('Catégorie', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPONCHANGE',
+    description: "Renvoie VRAI chaque fois que la valeur d'un champ change au sein du groupe.",
+    parameters: [ 'Group Path', 'Sort Field', 'Field' ],
+    example: "GROUPONCHANGE('Catégorie', 'Prix', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPRTOTAL',
+    description: 'Calcule une somme cumulative (running total) au sein du groupe.',
+    parameters: [ 'Group Path', 'Sort Field', 'Value Field' ],
+    example: "GROUPRTOTAL('Catégorie', 'Prix', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPSERIES',
+    description: 'Crée une série numérique au sein du groupe.',
+    parameters: [ 'Group Path', 'Sort Field', 'Start', 'Increment' ],
+    example: "GROUPSERIES('Catégorie', 'Prix', 1, 1)",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPSUM',
+    description: "Calcule la somme totale d'un champ pour le groupe entier.",
+    parameters: [ 'Group Path', 'Value Field' ],
+    example: "GROUPSUM('Catégorie', 'Prix')",
+    category: 'Groupes'
   },
   {
     nom: 'GROUPVAL',
     description: "Récupère la valeur d'un champ à partir du niveau d'en-tête de groupe spécifié.",
-    parameters: ["Nom du champ", "Niveau de groupe"],
-    example: "GROUPVAL('NomDeCatégorie', 1)"
+    parameters: [ 'Nom du champ', 'Niveau de groupe' ],
+    example: "GROUPVAL('NomDeCatégorie', 1)",
+    category: 'Groupes'
+  },
+  {
+    nom: 'GROUPXREFFIELD',
+    description: 'Effectue une recherche croisée (VLOOKUP) limitée au groupe actuel.',
+    parameters: [ 'Group Path', 'Search Field', 'Search Value', 'Return Field' ],
+    example: "GROUPXREFFIELD('Catégorie', 'Produit', 'T-shirt A', 'Prix')",
+    category: 'Groupes'
+  },
+  {
+    nom: 'I2OF5',
+    description: 'Convertit un code numérique en code-barres 2 parmi 5.',
+    parameters: [ 'Code' ],
+    example: "I2OF5(FIELDSTR('Code'))",
+    category: 'Code-barres & Images'
   },
   {
     nom: 'IF',
-    description: "Exécute une comparaison et retourne une valeur si c'est vrai, sinon une autre.",
-    parameters: ['Opérande 1', 'Opérateur', 'Opérande 2', 'Valeur si Vrai', 'Valeur si Faux'],
-    example: "IF(FIELDVAL('Prix'), '>', '100', 'Cher', 'Abordable')"
+    description: 'Effectue un test logique et renvoie des valeurs différentes.',
+    parameters: [ 'Operand', 'Operator', 'Operand', 'True Value', 'False Value' ],
+    example: "IF(FIELDVAL('Price'), '>', 100, 'Cher', 'Abordable')",
+    category: 'Logique'
   },
   {
     nom: 'IFEMPTY',
     description: "Vérifie si un champ est vide et retourne une valeur spécifiée si c'est le cas, sinon retourne la valeur du champ.",
-    parameters: ['Champ à vérifier', 'Valeur si vide'],
-    example: "IFEMPTY(FIELDSTR('Image'), 'image_par_defaut.jpg')"
+    parameters: [ 'Champ à vérifier', 'Valeur si vide' ],
+    example: "IFEMPTY(FIELDSTR('Image'), 'image_par_defaut.jpg')",
+    category: 'Logique'
   },
   {
     nom: 'INDEXOF',
-    description: "Trouve la position de la première occurrence d'une chaîne dans une autre.",
-    parameters: ['Chaîne de recherche', 'Chaîne à trouver', 'Index de départ (Optionnel)'],
-    example: "INDEXOF(FIELDSTR('Référence'), 'ABC')"
+    description: "Renvoie la position de la première occurrence d'une chaîne.",
+    parameters: [ 'Search In', 'Search For', '[Start Index]' ],
+    example: "INDEXOF(FIELDSTR('Text'), 'Apple')",
+    category: 'Texte'
+  },
+  {
+    nom: 'LASTINDEXOF',
+    description: "Renvoie la position de la dernière occurrence d'une chaîne.",
+    parameters: [ 'Search In', 'Search For', '[Start Index]' ],
+    example: "LASTINDEXOF(FIELDSTR('Text'), 'Apple')",
+    category: 'Texte'
   },
   {
     nom: 'LEFTSTR',
-    description: "Extrait un nombre de caractères depuis le début (gauche) d'une chaîne.",
-    parameters: ['Nom du champ', 'Nombre de caractères'],
-    example: "LEFTSTR('RéférenceProduit', 5)"
+    description: 'Extrait des caractères en partant de la gauche.',
+    parameters: [ 'Field Name', 'Length' ],
+    example: "LEFTSTR('Manufacturer', 5)",
+    category: 'Texte'
   },
   {
     nom: 'LENGTH',
-    description: "Retourne la longueur d'une chaîne de caractères.",
-    parameters: ['Chaîne'],
-    example: "LENGTH(FIELDSTR('Description'))"
+    description: "Renvoie la longueur d'une chaîne de texte.",
+    parameters: [ 'String' ],
+    example: "LENGTH(FIELDSTR('Manufacturer'))",
+    category: 'Texte'
+  },
+  {
+    nom: 'LITERAL',
+    description: 'Traite une chaîne de caractères comme un nom de champ.',
+    parameters: [ 'String' ],
+    example: "LEFTSTR(LITERAL('abcdefg'), 2)",
+    category: 'Texte'
   },
   {
     nom: 'LOOKUP',
     description: "Recherche une valeur dans un champ d'une source de données et retourne la valeur d'un autre champ dans la ligne correspondante.",
-    parameters: ["Source de données", "Champ de recherche", "Valeur à chercher", "Champ de retour"],
-    example: "LOOKUP('Fournisseurs', 'ID_Produit', FIELDSTR('SKU'), 'Nom_Fournisseur')"
+    parameters: [
+      'Source de données',
+      'Champ de recherche',
+      'Valeur à chercher',
+      'Champ de retour'
+    ],
+    example: "LOOKUP('Fournisseurs', 'ID_Produit', FIELDSTR('SKU'), 'Nom_Fournisseur')",
+    category: 'Données & Champs'
   },
   {
     nom: 'LOWER',
-    description: "Convertit une chaîne de caractères en minuscules.",
-    parameters: ['Nom du champ'],
-    example: "LOWER('Titre')"
+    description: "Met tout le texte d'un champ en minuscules.",
+    parameters: [ 'Field Name' ],
+    example: "LOWER('Manufacturer')",
+    category: 'Texte'
   },
   {
     nom: 'MAX',
-    description: "Retourne la valeur la plus élevée parmi ses arguments.",
-    parameters: ['Nombre 1', 'Nombre 2', '...'],
-    example: "MAX(FIELDVAL('Score1'), FIELDVAL('Score2'))"
+    description: 'Renvoie la plus grande valeur parmi ses arguments.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "MAX(FIELDVAL('Val1'), FIELDVAL('Val2'))",
+    category: 'Mathématiques'
   },
   {
     nom: 'MIDSTR',
     description: "Extrait une sous-chaîne du milieu d'une chaîne, en spécifiant le début et la longueur.",
-    parameters: ['Texte', 'Position de départ', 'Nombre de caractères'],
-    example: "MIDSTR(FIELDSTR('CodeProduit'), 4, 3)"
+    parameters: [ 'Texte', 'Position de départ', 'Nombre de caractères' ],
+    example: "MIDSTR(FIELDSTR('CodeProduit'), 4, 3)",
+    category: 'Texte'
   },
   {
     nom: 'MIN',
-    description: "Retourne la valeur la plus basse parmi ses arguments.",
-    parameters: ['Nombre 1', 'Nombre 2', '...'],
-    example: "MIN(FIELDVAL('PrixMin'), FIELDVAL('PrixMax'))"
+    description: 'Renvoie la plus petite valeur parmi ses arguments.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "MIN(FIELDVAL('Val1'), FIELDVAL('Val2'))",
+    category: 'Mathématiques'
   },
   {
     nom: 'MOD',
-    description: "Calcule le reste d'une division.",
-    parameters: ['Dividende', 'Diviseur'],
-    example: "MOD(10, 3)"
+    description: "Renvoie le reste d'une division.",
+    parameters: [ 'LHS', 'Factor' ],
+    example: "MOD(FIELDVAL('Number'), 3)",
+    category: 'Mathématiques'
   },
   {
     nom: 'MUL',
-    description: "Multiplie un nombre par un autre.",
-    parameters: ['Facteur 1', 'Facteur 2'],
-    example: "MUL(FIELDVAL('Quantité'), FIELDVAL('PrixUnitaire'))"
+    description: 'Multiplie deux nombres.',
+    parameters: [ 'LHS', 'Factor' ],
+    example: "MUL(FIELDVAL('Price'), 5)",
+    category: 'Mathématiques'
   },
   {
     nom: 'NOT',
-    description: "Inverse une valeur logique (VRAI devient FAUX, et vice-versa).",
-    parameters: ['Condition'],
-    example: "NOT(FIELDSTR('EstActif'))"
+    description: 'Inverse la valeur logique de son argument.',
+    parameters: [ 'Argument' ],
+    example: "NOT(FIELDSTR('myflag'))",
+    category: 'Logique'
   },
   {
     nom: 'NOW',
     description: "Retourne la date et l'heure actuelles.",
     parameters: [],
-    example: "NOW()"
+    example: 'NOW()',
+    category: 'Date & Heure'
   },
   {
     nom: 'OR',
-    description: "Retourne VRAI si au moins une des conditions est vraie.",
-    parameters: ['Condition 1', 'Condition 2', '...'],
-    example: "OR(IF(FIELDSTR('Statut'), '=', 'Urgent'), IF(FIELDSTR('Priorité'), '>', 5))"
+    description: 'Renvoie VRAI si au moins un argument est VRAI.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "OR(IF(FIELDVAL('Price'), '>', 100), FIELDSTR('InStock'))",
+    category: 'Logique'
   },
   {
     nom: 'PARTCOUNT',
-    description: "Compte le nombre de parties dans une chaîne en utilisant un délimiteur spécifié.",
-    parameters: ["Champ", "Délimiteur"],
-    example: "PARTCOUNT(FIELDSTR('MotsClés'), ',')"
+    description: 'Compte le nombre de parties dans une chaîne en utilisant un délimiteur spécifié.',
+    parameters: [ 'Champ', 'Délimiteur' ],
+    example: "PARTCOUNT(FIELDSTR('MotsClés'), ',')",
+    category: 'Texte'
   },
   {
     nom: 'PARTSTR',
-    description: "Extrait un élément spécifique d'une chaîne délimitée.",
-    parameters: ['Nom du champ', 'Numéro de partie', 'Délimiteur'],
-    example: "PARTSTR('Tailles', 2, ',')"
+    description: "Extrait un élément spécifique d'un champ délimité.",
+    parameters: [ 'Field Name', 'Part No.', 'Delimiter' ],
+    example: "PARTSTR('Images', 1, ',')",
+    category: 'Texte'
   },
   {
     nom: 'PROPER',
-    description: "Met en majuscule la première lettre de chaque mot dans une chaîne de caractères.",
-    parameters: ["Texte"],
-    example: "PROPER(FIELDSTR('nom_client'))"
+    description: 'Met en majuscule la première lettre de chaque mot dans une chaîne de caractères.',
+    parameters: [ 'Texte' ],
+    example: "PROPER(FIELDSTR('nom_client'))",
+    category: 'Texte'
   },
   {
     nom: 'RAND',
-    description: "Génère un nombre aléatoire entre 0 et 1.",
+    description: 'Génère un nombre aléatoire entre 0 et 1.',
     parameters: [],
-    example: "RAND()"
+    example: 'RAND()',
+    category: 'Mathématiques'
   },
   {
     nom: 'REGEX',
-    description: "Effectue une recherche et un remplacement basés sur une expression régulière.",
-    parameters: ['Chaîne à analyser', 'Expression régulière', 'Chaîne de remplacement'],
-    example: "REGEX(FIELDSTR('Code'), '(\\d{3})-(\\d{3})', '$1 $2')"
+    description: 'Recherche et remplace via une expression régulière.',
+    parameters: [ 'String to Search', 'Regex', 'String to Replace' ],
+    example: "REGEX(FIELDSTR('Code'), '^(....)(...)(..)', '\\1.\\2.\\3')",
+    category: 'Texte'
+  },
+  {
+    nom: 'REGEXESCAPE',
+    description: "Échappe les caractères spéciaux d'une expression régulière.",
+    parameters: [ 'Text' ],
+    example: "REGEXESCAPE('test.jpg')",
+    category: 'Texte'
+  },
+  {
+    nom: 'REMOVEBLANKLINES',
+    description: "Supprime les paragraphes vides d'un texte.",
+    parameters: [ 'Text' ],
+    example: "REMOVEBLANKLINES(FIELDSTR('Text'))",
+    category: 'Texte'
   },
   {
     nom: 'REPLACE',
     description: "Remplace une partie d'une chaîne de caractères par une autre.",
-    parameters: ['Texte original', 'Texte à chercher', 'Nouveau texte'],
-    example: "REPLACE(FIELDSTR('SKU'), 'OLD-', 'NEW-')"
+    parameters: [ 'Texte original', 'Texte à chercher', 'Nouveau texte' ],
+    example: "REPLACE(FIELDSTR('SKU'), 'OLD-', 'NEW-')",
+    category: 'Texte'
   },
   {
     nom: 'RIGHTSTR',
-    description: "Extrait un nombre de caractères depuis la fin (droite) d'une chaîne.",
-    parameters: ['Nom du champ', 'Nombre de caractères'],
-    example: "RIGHTSTR('CodeProduit', 4)"
+    description: 'Extrait des caractères en partant de la droite.',
+    parameters: [ 'Field Name', 'Length' ],
+    example: "RIGHTSTR('Manufacturer', 8)",
+    category: 'Texte'
   },
   {
     nom: 'ROUND',
-    description: "Arrondit un nombre à un nombre de décimales spécifié.",
-    parameters: ['Nombre', 'Nombre de décimales'],
-    example: "ROUND(FIELDVAL('Prix'), 2)"
+    description: 'Arrondit un nombre à un nombre de décimales spécifié.',
+    parameters: [ 'Nombre', 'Nombre de décimales' ],
+    example: "ROUND(FIELDVAL('Prix'), 2)",
+    category: 'Mathématiques'
   },
   {
     nom: 'SEARCH',
-    description: "Trouve une chaîne de texte dans une autre (insensible à la casse) et retourne sa position de départ.",
-    parameters: ['Texte à trouver', 'Texte où chercher'],
-    example: "SEARCH('PRO', FIELDSTR('NomProduit'))"
+    description: 'Trouve une chaîne de texte dans une autre (insensible à la casse) et retourne sa position de départ.',
+    parameters: [ 'Texte à trouver', 'Texte où chercher' ],
+    example: "SEARCH('PRO', FIELDSTR('NomProduit'))",
+    category: 'Texte'
+  },
+  {
+    nom: 'SENTENCECASE',
+    description: 'Met la première lettre de la phrase en majuscule.',
+    parameters: [ 'String' ],
+    example: "SENTENCECASE(FIELDSTR('Sentence'))",
+    category: 'Texte'
+  },
+  {
+    nom: 'SNIPPETDEPTH',
+    description: "Renvoie la hauteur/largeur en points d'un snippet EasyCatalog.",
+    parameters: [ 'Filename' ],
+    example: "SNIPPETDEPTH('mon_snippet.idms')",
+    category: 'Utilitaires'
+  },
+  {
+    nom: 'SNIPPETWIDTH',
+    description: "Renvoie la hauteur/largeur en points d'un snippet EasyCatalog.",
+    parameters: [ 'Filename' ],
+    example: "SNIPPETWIDTH('mon_snippet.idms')",
+    category: 'Utilitaires'
+  },
+  {
+    nom: 'STRIPWHITESPACE',
+    description: "Supprime les espaces superflus d'une chaîne.",
+    parameters: [ 'String', '[Strip All]' ],
+    example: "STRIPWHITESPACE(FIELDSTR('Text'))",
+    category: 'Texte'
   },
   {
     nom: 'SUB',
-    description: "Soustrait des nombres du premier argument.",
-    parameters: ['Valeur initiale', 'Nombre à soustraire 1', '...'],
-    example: "SUB(FIELDVAL('Total'), FIELDVAL('Réduction'))"
+    description: 'Soustrait les arguments suivants du premier.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "SUB(FIELDVAL('Total'), 10, 5)",
+    category: 'Mathématiques'
   },
   {
     nom: 'SUBSTR',
-    description: "Extrait des caractères spécifiques d'une chaîne à une position donnée.",
-    parameters: ['Nom du champ', 'Index de début', 'Longueur'],
-    example: "SUBSTR('NuméroDeSérie', 3, 8)"
+    description: "Extrait des caractères spécifiques d'un champ.",
+    parameters: [ 'Field Name', 'Start Index', 'Length' ],
+    example: "SUBSTR('Manufacturer', 3, 8)",
+    category: 'Texte'
   },
   {
     nom: 'SUM',
-    description: "Calcule la somme de tous ses arguments.",
-    parameters: ['Nombre 1', 'Nombre 2', '...'],
-    example: "SUM(FIELDVAL('VentesT1'), FIELDVAL('VentesT2'))"
+    description: 'Renvoie la somme de ses arguments.',
+    parameters: [ 'argument1', '[argument2]', '...' ],
+    example: "SUM(FIELDVAL('Price'), 20)",
+    category: 'Mathématiques'
   },
   {
     nom: 'SWITCH',
     description: "Évalue une expression et la compare à une série de valeurs, retournant le résultat correspondant à la première correspondance trouvée.",
-    parameters: ['Expression', 'Valeur 1', 'Résultat 1', 'Valeur 2', 'Résultat 2', '...', '[Résultat par défaut]'],
-    example: "SWITCH(FIELDSTR('Catégorie'), 'A', 'Priorité Haute', 'B', 'Priorité Moyenne', 'Priorité Basse')"
+    parameters: [
+      'Expression',
+      'Valeur 1',
+      'Résultat 1',
+      'Valeur 2',
+      'Résultat 2',
+      '...',
+      '[Résultat par défaut]'
+    ],
+    example: "SWITCH(FIELDSTR('Catégorie'), 'A', 'Priorité Haute', 'B', 'Priorité Moyenne', 'Priorité Basse')",
+    category: 'Logique'
+  },
+  {
+    nom: 'TITLECASE',
+    description: 'Met la première lettre de chaque mot en majuscule.',
+    parameters: [ 'String' ],
+    example: "TITLECASE(FIELDSTR('Title'))",
+    category: 'Texte'
   },
   {
     nom: 'TRIM',
     description: "Supprime les espaces superflus au début et à la fin d'une chaîne de caractères.",
-    parameters: ['Texte'],
-    example: "TRIM(FIELDSTR('Nom du produit'))"
+    parameters: [ 'Texte' ],
+    example: "TRIM(FIELDSTR('Nom du produit'))",
+    category: 'Texte'
   },
   {
     nom: 'UPPER',
-    description: "Convertit une chaîne de caractères en majuscules.",
-    parameters: ['Nom du champ'],
-    example: "UPPER('CodePays')"
+    description: "Met tout le texte d'un champ en majuscules.",
+    parameters: [ 'Field Name' ],
+    example: "UPPER('Manufacturer')",
+    category: 'Texte'
+  },
+  {
+    nom: 'URLDECODE',
+    description: 'Décode une chaîne encodée pour une URL.',
+    parameters: [ 'String' ],
+    example: "URLDECODE('This%20is%20a%20test')",
+    category: 'Texte'
+  },
+  {
+    nom: 'URLENCODE',
+    description: "Encode une chaîne pour une utilisation dans une URL.",
+    parameters: [ 'String' ],
+    example: "URLENCODE('This is a test')",
+    category: 'Texte'
+  },
+  {
+    nom: 'XREFFIELD',
+    description: 'Recherche une valeur dans une source de données et renvoie une autre valeur.',
+    parameters: [
+      'Search Field',
+      'Search Value',
+      'Return Field',
+      '[Data Source]'
+    ],
+    example: "XREFFIELD('PartNo', FIELDSTR('XRefPartNo'), 'Page')",
+    category: 'Données & Champs'
   }
 ].sort((a, b) => a.nom.localeCompare(b.nom));
 

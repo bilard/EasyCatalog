@@ -7,7 +7,7 @@ interface FormulaVisualizerProps {
 
 const FormulaVisualizer: React.FC<FormulaVisualizerProps> = ({ node }) => {
   if (!node) {
-    return <p className="text-slate-500 text-sm text-center py-4">Commencez à taper une formule pour voir sa structure et son résultat ici...</p>;
+    return null;
   }
 
   if (typeof node === 'string') {

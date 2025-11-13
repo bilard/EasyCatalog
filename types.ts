@@ -7,6 +7,7 @@ export interface FunctionInfo {
   description: string;
   parameters: string[];
   example: string;
+  category: string;
 }
 
 export interface QuizQuestion {
