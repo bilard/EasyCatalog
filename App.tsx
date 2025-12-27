@@ -4,9 +4,10 @@ import LoadingSpinner from './components/LoadingSpinner';
 import TutorialDisplay from './components/TutorialDisplay';
 import Customizer from './components/Customizer';
 import Quiz from './components/QCM';
-import { SearchIcon, SparklesIcon, HomeIcon, CodeIcon, QuizIcon } from './components/icons';
+import { TarotApp } from './components/tarot/TarotApp';
+import { SearchIcon, SparklesIcon, HomeIcon, CodeIcon, QuizIcon, TarotIcon } from './components/icons';
 
-type View = 'search' | 'customizer' | 'quiz';
+type View = 'search' | 'customizer' | 'quiz' | 'tarot';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<View>('search');
@@ -178,11 +179,14 @@ const App: React.FC = () => {
           <li>
             <NavButton view="quiz" label="Quiz" icon={<QuizIcon />} />
           </li>
+          <li>
+            <NavButton view="tarot" label="Tarot Mystique" icon={<TarotIcon />} />
+          </li>
         </ul>
       </nav>
 
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div className={`mx-auto ${activeView === 'customizer' ? 'w-[95%] max-w-screen-xl' : 'max-w-4xl'}`}>
+      <main className={`flex-1 ${activeView === 'tarot' ? 'p-0' : 'p-4 md:p-8'} overflow-y-auto`}>
+        <div className={`mx-auto ${activeView === 'tarot' ? 'w-full h-full' : activeView === 'customizer' ? 'w-[95%] max-w-screen-xl' : 'max-w-4xl'}`}>
           <div className={`transition-opacity duration-200 ease-in-out ${animationClass}`}>
             {activeView === 'search' && (
               <>
@@ -278,11 +282,17 @@ const App: React.FC = () => {
                 <Quiz />
               </>
             )}
+
+            {activeView === 'tarot' && (
+              <TarotApp />
+            )}
           </div>
 
-          <footer className="text-center mt-12 pb-8 text-slate-500 text-sm">
-            <p>Développé avec React, Tailwind CSS, et l'API Gemini.</p>
-          </footer>
+          {activeView !== 'tarot' && (
+            <footer className="text-center mt-12 pb-8 text-slate-500 text-sm">
+              <p>Développé avec React, Tailwind CSS, et l'API Gemini.</p>
+            </footer>
+          )}
         </div>
       </main>
     </div>
